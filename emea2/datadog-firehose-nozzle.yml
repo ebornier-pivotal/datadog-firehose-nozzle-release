@@ -1,0 +1,77 @@
+---
+name: datadog-firehose-nozzle
+director_uuid: f7a8784a-0c9b-4a63-b9c4-c668a8d68133
+releases:
+  - name: datadog-firehose-nozzle
+    version: latest
+
+compilation:
+  workers: 1
+  network: datadog-firehose-nozzle-net
+  reuse_compilation_vms: true
+  cloud_properties:
+    ram: 1024
+    disk: 20480 
+    cpu: 2
+
+update:
+  canaries: 1
+  canary_watch_time: 30000-100000
+  update_watch_time: 30000-100000
+  max_in_flight: 1
+  max_errors: 1
+
+networks:
+- name: datadog-firehose-nozzle-net
+  subnets:
+  - range: 10.68.58.0/24
+    gateway: 10.68.58.1
+    dns:
+    - 10.68.0.10
+    - 10.68.0.11
+    - 10.68.58.143 
+    - 8.8.8.8 
+    reserved:
+    - 10.68.58.2-10.68.58.94
+    - 10.68.58.101-10.68.58.254
+    cloud_properties:
+      name: VM Network
+
+resource_pools:
+- name: datadog-firehose-nozzle
+  network: datadog-firehose-nozzle-net
+  stemcell:
+    name: bosh-vsphere-esxi-ubuntu-trusty-go_agent
+    version: '3146'
+  cloud_properties:
+    ram: 1024
+    disk: 20480
+    cpu: 1
+
+jobs:
+- name: datadog-firehose-nozzle
+  memory_mb: 2048
+  templates:
+    - {name: datadog-firehose-nozzle, release: datadog-firehose-nozzle}
+  instances: 1
+  resource_pool: datadog-firehose-nozzle
+  networks:
+    - name: datadog-firehose-nozzle-net
+
+properties:
+  loggregator:
+    traffic_controller_url: wss://doppler.emea-2.fe.gopivotal.com:4443
+  datadog:
+    api_url: https://app.datadoghq.com/api/v1/series
+    api_key: 0d0c50d739b8821e544d105f5e366ae1
+    flush_duration_seconds: 15
+    metric_prefix: emea2.nozzle.
+  uaa:
+    url: https://uaa.emea-2.fe.gopivotal.com
+    username: opentsdb-firehose-nozzle 
+    password: a23cd7c4544b4c9d9812 
+  nozzle:
+    disable_access_control: null
+    insecure_ssl_skip_verify: true
+    subscription_id: datadog-nozzle
+    deployment: datadog-firehose-nozzle

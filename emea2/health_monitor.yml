@@ -1,0 +1,72 @@
+---
+http:
+  port: 25923
+
+mbus:
+  endpoint: nats://127.0.0.1:4222
+  user: nats
+  password: fda8491a75ca516afb2c
+
+director: &director
+  endpoint: https://127.0.0.1:25555
+  user: director
+  password: f248a40e718cd3104830
+  # default to empty string so it works in micro bosh
+  client_id: 
+  client_secret: 
+  ca_cert: /var/vcap/store/health_monitor/uaa.pem
+
+intervals:
+  prune_events: 30
+  poll_director: 60
+  poll_grace_period: 30
+  log_stats: 300
+  analyze_agents: 60
+  agent_timeout: 180
+  rogue_agent_alert: 180
+
+logfile: /var/vcap/sys/log/health_monitor/health_monitor.log
+loglevel: info
+
+plugins:
+
+  - name: logger
+    events:
+      - alert
+
+  - name: data_dog
+    events:
+      - alert
+      - heartbeat
+    options:
+      api_key: 0d0c50d739b8821e544d105f5e366ae1
+      application_key: 36cfd6373b4c2e51952fc40cdd10366dbb34a219
+      pagerduty_service_name: https://app.datadoghq.com/api/v1/series
+  
+
+  
+
+  
+
+  
+
+  
+  - name: resurrector
+    events:
+      - alert
+    options:
+      director: *director
+      minimum_down_jobs: 5
+      percent_threshold: 0.2
+      time_threshold: 600
+  
+
+  
+
+  
+
+  
+
+   
+
+  
