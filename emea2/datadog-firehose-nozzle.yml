@@ -63,13 +63,13 @@ properties:
     traffic_controller_url: wss://doppler.emea-2.fe.gopivotal.com:4443
   datadog:
     api_url: https://app.datadoghq.com/api/v1/series
-    api_key: 0d0c50d739b8821e544d105f5e366ae1
+    api_key: 
     flush_duration_seconds: 15
     metric_prefix: emea2.nozzle.
   uaa:
     url: https://uaa.emea-2.fe.gopivotal.com
-    username: opentsdb-firehose-nozzle 
-    password: a23cd7c4544b4c9d9812 
+    username:  
+    password:  
   nozzle:
     disable_access_control: null
     insecure_ssl_skip_verify: true
