@@ -39,8 +39,8 @@ plugins:
       - alert
       - heartbeat
     options:
-      api_key: 0d0c50d739b8821e544d105f5e366ae1
-      application_key: 36cfd6373b4c2e51952fc40cdd10366dbb34a219
+      api_key: 
+      application_key: 
       pagerduty_service_name: https://app.datadoghq.com/api/v1/series
   
 
